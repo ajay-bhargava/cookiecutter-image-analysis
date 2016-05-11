@@ -4,6 +4,8 @@ import os
 import logging
 import argparse
 
+from jicbioimage.core.image import Image
+from jicbioimage.core.transform import transformation
 from jicbioimage.core.io import AutoName, AutoWrite
 
 __version__ = "{{ cookiecutter.version }}"
@@ -11,9 +13,17 @@ __version__ = "{{ cookiecutter.version }}"
 AutoName.prefix_format = "{:03d}_"
 
 
+@transformation
+def identity(image):
+    """Return the image as is."""
+    return image
+
+
 def analyse_file(fpath, output_directory):
     """Analyse a single file."""
     logging.info("Analysing file: {}".format(fpath))
+    image = Image.from_file(fpath)
+    image = identity(image)
 
 
 def analyse_directory(input_directory, output_directory):
