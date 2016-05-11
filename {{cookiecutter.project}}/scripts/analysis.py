@@ -11,14 +11,17 @@ __version__ = "{{ cookiecutter.version }}"
 AutoName.prefix_format = "{:03d}_"
 
 
-def analyse_file(fpath):
+def analyse_file(fpath, output_directory):
     """Analyse a single file."""
     logging.info("Analysing file: {}".format(fpath))
 
 
-def analyse_directory(directory):
+def analyse_directory(input_directory, output_directory):
     """Analyse all the files in a directory."""
-    logging.info("Analysing files in directory: {}".format(directory))
+    logging.info("Analysing files in directory: {}".format(input_directory))
+    for fname in os.listdir(input_directory):
+        fpath = os.path.join(input_directory, fname)
+        analyse_file(fpath, output_directory)
 
 
 def main():
