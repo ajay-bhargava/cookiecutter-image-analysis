@@ -1,4 +1,6 @@
 {
   "project": "bioimage-analysis",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "start": "{% now 'utc', '%Y-%m-%d' %}",
+  "_extensions": ["jinja2_time.TimeExtension"]
 }

@@ -1,3 +1,8 @@
 ---
 
 version: {{ cookiecutter.version }}
+authors:
+  - Matthew Hartley
+  - Tjelvar Olsson
+start: {{ cookiecutter.start }}
+end: sometime
