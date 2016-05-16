@@ -1,4 +1,4 @@
 #!/bin/bash
 
-CONTAINER=jicscicomp/jicbioimage
+CONTAINER=jicbioimage
 docker run -it --rm -v `pwd`/data:/data -v `pwd`/scripts:/scripts -v `pwd`/output:/output $CONTAINER
