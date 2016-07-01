@@ -1,6 +1,6 @@
 !#/bin/bash
 
-IMAGE_NAME=jicbioimage
+IMAGE_NAME={{ cookiecutter.project }}
 
 cp ../requirements.txt $IMAGE_NAME
 cd $IMAGE_NAME
