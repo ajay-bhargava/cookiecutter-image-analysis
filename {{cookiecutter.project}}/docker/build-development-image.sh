@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="{{ cookiecutter.project }}"
+IMAGE_NAME="{{ cookiecutter.project }}-development"
 
 cp ../requirements.txt $IMAGE_NAME
 sleep 1
