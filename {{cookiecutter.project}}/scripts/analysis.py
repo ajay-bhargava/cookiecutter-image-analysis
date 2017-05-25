@@ -94,10 +94,10 @@ def main():
     logging.info("Script version: {}".format(__version__))
 
     # Run the analysis.
-    if os.path.isdir(args.input_source):
-        analyse_dataset(args.input_source, args.output_dir)
+    if os.path.isdir(args.input_dataset):
+        analyse_dataset(args.input_dataset, args.output_dir)
     else:
-        parser.error("{} not a directory".format(args.input_source))
+        parser.error("{} not a directory".format(args.input_dataset))
 
 if __name__ == "__main__":
     main()
