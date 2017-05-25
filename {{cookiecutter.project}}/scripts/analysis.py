@@ -3,6 +3,9 @@
 import os
 import logging
 import argparse
+import errno
+
+from dtoolcore import DataSet
 
 from jicbioimage.core.image import Image
 from jicbioimage.core.transform import transformation
@@ -11,6 +14,24 @@ from jicbioimage.core.io import AutoName, AutoWrite
 __version__ = "{{ cookiecutter.version }}"
 
 AutoName.prefix_format = "{:03d}_"
+
+
+def safe_mkdir(directory):
+    """Create directories if they do not exist."""
+    try:
+        os.makedirs(directory)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(directory):
+            pass
+        else:
+            raise
+
+
+def item_output_path(output_directory, rel_path):
+    """Return item output path; and create it if it does not already exist."""
+    abs_path = os.path.join(output_directory, rel_path)
+    safe_mkdir(abs_path)
+    return abs_path
 
 
 @transformation
@@ -22,22 +43,30 @@ def identity(image):
 def analyse_file(fpath, output_directory):
     """Analyse a single file."""
     logging.info("Analysing file: {}".format(fpath))
+
+    AutoName.directory = output_directory
+
     image = Image.from_file(fpath)
     image = identity(image)
 
 
-def analyse_directory(input_directory, output_directory):
-    """Analyse all the files in a directory."""
-    logging.info("Analysing files in directory: {}".format(input_directory))
-    for fname in os.listdir(input_directory):
-        fpath = os.path.join(input_directory, fname)
-        analyse_file(fpath, output_directory)
+def analyse_dataset(dataset_dir, output_dir):
+    """Analyse all the files in the dataset."""
+    dataset = DataSet.from_path(dataset_dir)
+    logging.info("Analysing items in dataset: {}".format(dataset.name))
+
+    for i in dataset.identifiers:
+        data_item_abspath = dataset.abspath_from_identifier(i)
+        item_info = dataset.item_from_identifier(i)
+
+        specific_output_dir = item_output_path(output_dir, item_info["path"])
+        analyse_file(data_item_abspath, specific_output_dir)
 
 
 def main():
     # Parse the command line arguments.
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("input_source", help="Input file/directory")
+    parser.add_argument("input_dataset", help="Input dataset")
     parser.add_argument("output_dir", help="Output directory")
     parser.add_argument("--debug", default=False, action="store_true",
                         help="Write out intermediate images")
@@ -65,12 +94,10 @@ def main():
     logging.info("Script version: {}".format(__version__))
 
     # Run the analysis.
-    if os.path.isfile(args.input_source):
-        analyse_file(args.input_source, args.output_dir)
-    elif os.path.isdir(args.input_source):
-        analyse_directory(args.input_source, args.output_dir)
+    if os.path.isdir(args.input_source):
+        analyse_dataset(args.input_source, args.output_dir)
     else:
-        parser.error("{} not a file or directory".format(args.input_source))
+        parser.error("{} not a directory".format(args.input_source))
 
 if __name__ == "__main__":
     main()
