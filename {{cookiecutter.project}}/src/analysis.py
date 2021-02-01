@@ -1,4 +1,4 @@
-"""{{ cookiecutter.project }} analysis."""
+"""{{ cookiecutter.project }} sample analysis."""
 
 import os
 import logging

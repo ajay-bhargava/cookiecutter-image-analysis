@@ -1,6 +1,5 @@
 # Cookiecutter image analysis project template
 
-
 ## Dependencies
 
 Requires [Cookiecutter](http://cookiecutter.readthedocs.io/) version 1.4 or greater.
